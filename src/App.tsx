@@ -8,6 +8,7 @@ import { TechSpecModal } from './components/TechSpecModal';
 import { SpawnAgentModal } from './components/SpawnAgentModal';
 import { createAvatarVideoStream, getMediaDevicesStream } from './utils/webrtcSim';
 import { speakText, stopSpeaking } from './utils/speechSynth';
+import { playSound } from './utils/soundEffects';
 
 export default function App() {
   const [viewMode, setViewMode] = useState<'call' | 'tech_spec'>('call');
@@ -135,6 +136,9 @@ export default function App() {
   const handleSpawnAgent = (name: string, persona: AgentPersonaType, initialTask: string) => {
     const agentId = `bot_${persona}_${Date.now().toString().slice(-4)}`;
 
+    // Play spawn sound effect
+    playSound('spawn');
+
     const titleMap: Record<string, string> = {
       code_architect: 'Principal Code Architect',
       research_analyst: 'Market & Tech Analyst',
@@ -233,6 +237,9 @@ export default function App() {
       });
 
       const data = await res.json();
+
+      // Play completion sound effect
+      playSound('success');
 
       // Update Participant & Task State upon completion
       setParticipants((prev) =>
@@ -395,6 +402,9 @@ export default function App() {
 
   // Terminate sub-agent
   const handleTerminateAgent = (agentId: string) => {
+    // Play termination sound effect
+    playSound('terminate');
+
     botCleanupRef.current[agentId]?.();
     delete botStreamsRef.current[agentId];
     delete botCleanupRef.current[agentId];

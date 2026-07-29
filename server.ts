@@ -243,7 +243,16 @@ Instructions:
 
     // Fallback if no LLM key or text empty
     if (!verbalSpeechResponse) {
-      if (userMessage.toLowerCase().includes('build') || userMessage.toLowerCase().includes('app') || userMessage.toLowerCase().includes('landing')) {
+      const msgLower = userMessage.toLowerCase();
+      if (
+        msgLower.includes('build') ||
+        msgLower.includes('app') ||
+        msgLower.includes('landing') ||
+        msgLower.includes('code') ||
+        msgLower.includes('schema') ||
+        msgLower.includes('database') ||
+        msgLower.includes('express')
+      ) {
         const newAgent = {
           id: `bot_code_${Date.now().toString().slice(-4)}`,
           name: 'DevBot - Code Architect',
@@ -259,8 +268,75 @@ Instructions:
           task: newAgent.initialTask,
         });
         verbalSpeechResponse = `Understood. I am spawning DevBot to architect the system and database schema right away.`;
+      } else if (
+        msgLower.includes('research') ||
+        msgLower.includes('market') ||
+        msgLower.includes('competitor') ||
+        msgLower.includes('study') ||
+        msgLower.includes('analyze')
+      ) {
+        const newAgent = {
+          id: `bot_research_${Date.now().toString().slice(-4)}`,
+          name: 'ResearchBot - Market Analyst',
+          persona: 'research_analyst',
+          title: 'Market & Tech Analyst',
+          initialTask: 'Conduct market competitor analysis and technical spec benchmarks.',
+        };
+        spawnedAgentsList.push(newAgent);
+        logPubSubEvent('pm:control', 'PM_Orchestrator', 'ALL', 'agent:spawn', {
+          agent_id: newAgent.id,
+          name: newAgent.name,
+          persona: newAgent.persona,
+          task: newAgent.initialTask,
+        });
+        verbalSpeechResponse = `Got it. Spawning ResearchBot to perform competitive research and analyze options.`;
+      } else if (
+        msgLower.includes('design') ||
+        msgLower.includes('ui') ||
+        msgLower.includes('ux') ||
+        msgLower.includes('mockup') ||
+        msgLower.includes('tailwind') ||
+        msgLower.includes('css')
+      ) {
+        const newAgent = {
+          id: `bot_design_${Date.now().toString().slice(-4)}`,
+          name: 'DesignBot - UX Designer',
+          persona: 'ux_designer',
+          title: 'Senior UX/UI Designer',
+          initialTask: 'Define UI component design system and Tailwind CSS layout spec.',
+        };
+        spawnedAgentsList.push(newAgent);
+        logPubSubEvent('pm:control', 'PM_Orchestrator', 'ALL', 'agent:spawn', {
+          agent_id: newAgent.id,
+          name: newAgent.name,
+          persona: newAgent.persona,
+          task: newAgent.initialTask,
+        });
+        verbalSpeechResponse = `Sure. Spawning DesignBot to layout UI wireframes and design system tokens.`;
+      } else if (
+        msgLower.includes('test') ||
+        msgLower.includes('qa') ||
+        msgLower.includes('security') ||
+        msgLower.includes('audit') ||
+        msgLower.includes('check')
+      ) {
+        const newAgent = {
+          id: `bot_qa_${Date.now().toString().slice(-4)}`,
+          name: 'QABot - Test Engineer',
+          persona: 'qa_engineer',
+          title: 'Lead QA Automation Engineer',
+          initialTask: 'Run end-to-end WebRTC test suite and check API security.',
+        };
+        spawnedAgentsList.push(newAgent);
+        logPubSubEvent('pm:control', 'PM_Orchestrator', 'ALL', 'agent:spawn', {
+          agent_id: newAgent.id,
+          name: newAgent.name,
+          persona: newAgent.persona,
+          task: newAgent.initialTask,
+        });
+        verbalSpeechResponse = `Absolutely. I am spinning up QABot to construct an end-to-end integration and load test suite.`;
       } else {
-        verbalSpeechResponse = `Got it. I am coordinating with the team and updating our master agenda for the project.`;
+        verbalSpeechResponse = `I hear you. I'm reviewing our project scope and will update our master agenda shortly. Feel free to instruct me to build, research, design, or test.`;
       }
     }
 
